@@ -20,6 +20,27 @@ struct Menu: View {
     var body: some View {
         VStack(alignment: .leading) {
             
+            // HEADER
+            ZStack {
+                Image("Logo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 40)
+
+                HStack {
+                    Spacer()
+
+                    Image("profile-image-placeholder")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 40, height: 40)
+                        .clipShape(Circle())
+                }
+                .padding(.horizontal)
+            }
+            .padding(.vertical, 10)
+            .background(Color.white)
+            
             // HERO
             VStack(alignment: .leading, spacing: 16) {
                 
@@ -47,6 +68,7 @@ struct Menu: View {
                         .scaledToFill()
                         .frame(width: 140, height: 160)
                         .clipped()
+                        .cornerRadius(15)
                 }
                 
                 HStack(spacing: 10) {
@@ -91,6 +113,11 @@ struct Menu: View {
                                 Text(dish.title ?? "")
                                     .font(.headline)
 
+                                Text(dish.descriptionText ?? "")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                    .lineLimit(2)
+                                
                                 Text("$\(dish.price ?? "")")
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
@@ -110,15 +137,13 @@ struct Menu: View {
                                         .scaledToFill()
                                         .frame(width: 60, height: 60)
                                         .clipped()
-                                        .cornerRadius(8)
 
-//                                case .failure:
-//                                    Image("profile-image-placeholder")
-//                                        .resizable()
-//                                        .scaledToFill()
-//                                        .frame(width: 60, height: 60)
-//                                        .clipped()
-//                                        .cornerRadius(8)
+                                case .failure:
+                                    Image("fish-bone")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 60, height: 60)
+                                        .clipped()
 
                                 @unknown default:
                                     EmptyView()
@@ -127,8 +152,10 @@ struct Menu: View {
                         }
                     }
                 }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(Color.white)
             }
-            .background(Color(.white))
         }
         .padding()
         .onAppear {
@@ -205,6 +232,7 @@ struct Menu: View {
                             dish.title = item.title
                             dish.image = item.image
                             dish.price = item.price
+                            dish.descriptionText = item.description
                         }
 
                         try? viewContext.save()
